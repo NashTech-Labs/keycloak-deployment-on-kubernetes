@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-headless
+spec:
+  clusterIP: None
+  clusterIPs:
+  - None
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: keycloak
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    type: keycloak-service
+  name: keycloak-http
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app: keycloak

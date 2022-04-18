@@ -35,10 +35,31 @@ kubectl apply -f storageclass.yml
 
 ### 2. Create admin secrets for database
 
-Change values of these two keys encoded in base64 in `postgres-secrets.yml` file
+i) First, Encode your database password & username strings in base64
 
-*  POSTGRES_PASSWORD: YWRtaW4K
-*  POSTGRES_USER: YWRtaW4K
+```
+MY_DB_PASS=$(echo your_p@$$word | base64)
+MY_DB_USER=$(echo your_username | base64)
+
+echo -e "Your base64 encoded database username is: $MY_DB_USER\nYour base64 encoded database password is: $MY_DB_PASS"
+```
+
+**Output will look like this**
+
+```
+Your base64 encoded database username is: eW91cl91c2VybmFtZQo=
+Your base64 encoded database password is: eW91cl9wQDM3MDQ2d29yZAo=
+```
+
+Put these two values encoded in base64 in `postgres-secrets.yml` file in place of YOUR_DATABASE_USERNAME & YOUR_DATABASE_PASSWORD
+
+*  POSTGRES_PASSWORD: YOUR_DATABASE_PASSWORD
+*  POSTGRES_USER: YOUR_DATABASE_USERNAME
+
+```
+sed -i 's@YOUR_DATABASE_PASSWORD@'"$MY_DB_PASS"'@g' postgres-secrets.yml
+sed -i 's@YOUR_DATABASE_USERNAME@'"$MY_DB_USER"'@g' postgres-secrets.yml
+```
 
 ```
 kubectl apply -f postgres-secrets.yml
@@ -56,10 +77,31 @@ kubectl apply -f postgres-statefulset.yml
 
 ### 1. Create secrets for Keycloak
 
-Change values of these two keys encoded in base64 in `keycloak-sec.yml` file
+i) First, Encode your keycloak admin password & username strings in base64
 
-*  KEYCLOAK_ADMIN: YWRtaW4K
-*  KEYCLOAK_ADMIN_PASSWORD: YWRtaW4K
+```
+MY_KEYCLOAK_ADMIN_PASSWORD=$(echo your_p@$$word | base64)
+MY_KEYCLOAK_ADMIN_USERNAME=$(echo your_username | base64)
+
+echo -e "Your base64 encoded keycloak admin username is: $MY_KEYCLOAK_ADMIN_USERNAME\nYour base64 encoded keycloak admin password is: $MY_KEYCLOAK_ADMIN_PASSWORD"
+```
+
+**Output will look like this**
+
+```
+Your base64 encoded keycloak admin username is: eW91cl91c2VybmFtZQo=
+Your base64 encoded keycloak admin password is: eW91cl9wQDM3MDQ2d29yZAo=
+```
+
+Put these two values encoded in base64 in `keycloak-sec.yml` file in place of YOUR_KEYCLOAK_ADMIN_USERNAME & YOUR_KEYCLOAK_ADMIN_PASSWORD
+
+*  KEYCLOAK_ADMIN: YOUR_KEYCLOAK_ADMIN_USERNAME
+*  KEYCLOAK_ADMIN_PASSWORD: YOUR_KEYCLOAK_ADMIN_PASSWORD
+
+```
+sed -i 's@MY_KEYCLOAK_ADMIN_USERNAME@'"$MY_KEYCLOAK_ADMIN_USERNAME"'@g' keycloak-sec.yml
+sed -i 's@MY_KEYCLOAK_ADMIN_PASSWORD@'"$MY_KEYCLOAK_ADMIN_PASSWORD"'@g' keycloak-sec.yml
+```
 
 ### 2. Change host name in ingress file 
 
